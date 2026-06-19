@@ -326,3 +326,42 @@ export const getCleanWilayaName = (fullWilayaStr: string): string => {
   return (parts[parts.length - 1] || "").trim();
 };
 
+import algeriaCities from './data/algeria_cities.json';
+
+export interface CityCommune {
+  id: number;
+  commune_name_ascii: string;
+  commune_name: string;
+  daira_name_ascii: string;
+  daira_name: string;
+  wilaya_code: string;
+  wilaya_name_ascii: string;
+  wilaya_name: string;
+}
+
+export const getAlgeriaCities = (): CityCommune[] => {
+  return algeriaCities as CityCommune[];
+};
+
+export const getUniqueWilayas = (): string[] => {
+  const map = new Map<string, string>();
+  for (const c of (algeriaCities as CityCommune[])) {
+    const key = `${c.wilaya_code} - ${c.wilaya_name_ascii}`;
+    map.set(key, key);
+  }
+  return Array.from(map.values()).sort((a, b) => {
+    const codeA = a.split(" - ")[0] || "";
+    const codeB = b.split(" - ")[0] || "";
+    return codeA.localeCompare(codeB);
+  });
+};
+
+export const getCommunesForWilaya = (wilayaCode: string): string[] => {
+  if (!wilayaCode) return [];
+  const communes = (algeriaCities as CityCommune[])
+    .filter(c => c.wilaya_code === wilayaCode)
+    .map(c => c.commune_name_ascii);
+  return Array.from(new Set(communes)).sort((a, b) => a.localeCompare(b));
+};
+
+

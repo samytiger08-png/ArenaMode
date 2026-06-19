@@ -17,7 +17,8 @@ import { Product, CartItem, Order, CampaignSettings } from './types';
 import { 
   getStoredProducts, saveStoredProducts, 
   getStoredOrders, saveStoredOrders, 
-  getStoredCampaign, saveStoredCampaign 
+  getStoredCampaign, saveStoredCampaign,
+  getCleanWilayaName
 } from './data';
 
 export default function App() {
@@ -161,7 +162,15 @@ export default function App() {
         deliveryType: customerInfo.deliveryType,
         deliveryFee: customerInfo.deliveryFee,
         productPrice: item.product.price * item.quantity,
-        totalPrice: (item.product.price * item.quantity) + customerInfo.deliveryFee
+        totalPrice: (item.product.price * item.quantity) + customerInfo.deliveryFee,
+
+        // Firebase structured parameters
+        wilaya_code: customerInfo.wilaya ? customerInfo.wilaya.split(' - ')[0] : '',
+        wilaya_name: getCleanWilayaName(customerInfo.wilaya),
+        commune_name: customerInfo.commune,
+        delivery_type: customerInfo.deliveryType === 'Stop Desk' ? 'bureau' : 'à domicile',
+        delivery_price: customerInfo.deliveryFee,
+        total: (item.product.price * item.quantity) + customerInfo.deliveryFee
       };
     });
 
@@ -228,7 +237,15 @@ export default function App() {
       deliveryType: orderData.deliveryType,
       deliveryFee: orderData.deliveryFee,
       productPrice: orderData.productPrice,
-      totalPrice: orderData.totalPrice
+      totalPrice: orderData.totalPrice,
+
+      // Firebase structured parameters
+      wilaya_code: orderData.wilaya ? orderData.wilaya.split(' - ')[0] : '',
+      wilaya_name: getCleanWilayaName(orderData.wilaya),
+      commune_name: orderData.commune,
+      delivery_type: orderData.deliveryType === 'Stop Desk' ? 'bureau' : 'à domicile',
+      delivery_price: orderData.deliveryFee,
+      total: orderData.totalPrice
     };
 
     // Deduct stock for that product

@@ -455,22 +455,53 @@ export default function AdminPanel({
 
                         <div className="grid grid-cols-[110px_1fr] items-baseline">
                           <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs">Wilaya :</span>
-                          <span className="text-gray-800 font-semibold uppercase">{ord.wilaya}</span>
+                          <span className="text-gray-800 font-semibold uppercase">
+                            {ord.wilaya} {ord.wilaya_code && `(Code: ${ord.wilaya_code})`}
+                          </span>
                         </div>
 
                         <div className="grid grid-cols-[110px_1fr] items-baseline">
                           <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs">Commune :</span>
-                          <span className="text-gray-800 font-semibold uppercase">{ord.commune}</span>
+                          <span className="text-gray-800 font-semibold uppercase">{ord.commune_name || ord.commune}</span>
                         </div>
 
                         <div className="grid grid-cols-[110px_1fr] items-baseline">
                           <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs">Livraison :</span>
-                          <span className="text-gray-800 font-black uppercase text-[#FF7F50]">{ord.deliveryType || "Domicile"}</span>
+                          <span className="text-gray-800 font-black uppercase text-[#FF7F50]">
+                            {ord.deliveryType || "Domicile"} ({ord.delivery_type || (ord.deliveryType === 'Stop Desk' ? 'bureau' : 'à domicile')})
+                          </span>
                         </div>
 
                         <div className="grid grid-cols-[110px_1fr] items-baseline">
                           <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs">Frais :</span>
-                          <span className="font-mono font-bold text-gray-800">{ord.deliveryFee !== undefined ? `${ord.deliveryFee.toLocaleString()} DA` : "0 DA"}</span>
+                          <span className="font-mono font-bold text-gray-800">
+                            {ord.delivery_price !== undefined ? `${ord.delivery_price.toLocaleString()} DA` : (ord.deliveryFee !== undefined ? `${ord.deliveryFee.toLocaleString()} DA` : "0 DA")}
+                          </span>
+                        </div>
+
+                        {/* Database Fields Audit Trail */}
+                        <div className="p-3.5 bg-neutral-50 rounded-2xl border border-neutral-200/60 my-2 space-y-1.5 font-mono text-[11px] leading-relaxed text-gray-650">
+                          <div className="text-[9px] font-black uppercase tracking-widest text-neutral-400 border-b pb-1 border-neutral-200 mb-1">
+                            Données Base de Données (Firebase)
+                          </div>
+                          <div>
+                            <span className="font-bold text-neutral-500">wilaya_code:</span> <span className="text-[#1A1A2E] font-bold">"{ord.wilaya_code || ord.wilaya?.split(' - ')[0] || ''}"</span>
+                          </div>
+                          <div>
+                            <span className="font-bold text-neutral-500">wilaya_name:</span> <span className="text-[#1A1A2E] font-bold">"{ord.wilaya_name || (ord.wilaya?.includes(' - ') ? ord.wilaya.split(' - ')[1] : ord.wilaya) || ''}"</span>
+                          </div>
+                          <div>
+                            <span className="font-bold text-neutral-500">commune_name:</span> <span className="text-[#1A1A2E] font-bold">"{ord.commune_name || ord.commune || ''}"</span>
+                          </div>
+                          <div>
+                            <span className="font-bold text-neutral-500">delivery_type:</span> <span className="text-[#1A1A2E] font-bold">"{ord.delivery_type || (ord.deliveryType === 'Stop Desk' ? 'bureau' : 'à domicile')}"</span>
+                          </div>
+                          <div>
+                            <span className="font-bold text-neutral-500">delivery_price:</span> <span className="text-[#FF7F50] font-bold">{ord.delivery_price !== undefined ? ord.delivery_price : (ord.deliveryFee || 0)}</span>
+                          </div>
+                          <div>
+                            <span className="font-bold text-neutral-500">total:</span> <span className="text-[#FF7F50] font-bold">{ord.total !== undefined ? ord.total : (ord.totalPrice || 0)}</span>
+                          </div>
                         </div>
 
                         <div className="grid grid-cols-[110px_1fr] items-baseline">

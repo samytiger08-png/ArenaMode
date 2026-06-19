@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, Plus, Minus, CheckCircle, ShoppingBag, Check, ShieldCheck, Truck, RefreshCw, ArrowLeft, PhoneCall } from 'lucide-react';
 import { Product } from '../types';
-import { worldExpressFees, getCleanWilayaName } from '../data';
+import { worldExpressFees, getCleanWilayaName, getUniqueWilayas, getCommunesForWilaya } from '../data';
 
 interface ProductPageProps {
   product: Product;
@@ -31,21 +31,6 @@ interface ProductPageProps {
   onAddToCart: (product: Product, size: string, color: { name: string; class: string }) => void;
 }
 
-const ALGERIAN_WILAYAS = [
-  "01 - Adrar", "02 - Chlef", "03 - Laghouat", "04 - Oum El Bouaghi", "05 - Batna", 
-  "06 - Béjaïa", "07 - Biskra", "08 - Béchar", "09 - Blida", "10 - Bouira", 
-  "11 - Tamanrasset", "12 - Tébessa", "13 - Tlemcen", "14 - Tiaret", "15 - Tizi Ouzou", 
-  "16 - Alger", "17 - Djelfa", "18 - Jijel", "19 - Sétif", "20 - Saïda", 
-  "21 - Skikda", "22 - Sidi Bel Abbès", "23 - Annaba", "24 - Guelma", "25 - Constantine", 
-  "26 - Médéa", "27 - Mostaganem", "28 - M'Sila", "29 - Mascara", "30 - Ouargla", 
-  "31 - Oran", "32 - El Bayadh", "33 - Illizi", "34 - Bordj Bou Arréridj", "35 - Boumerdès", 
-  "36 - El Tarf", "37 - Tindouf", "38 - Tissemsilt", "39 - El Oued", "40 - Khenchela", 
-  "41 - Souk Ahras", "42 - Tipaza", "43 - Mila", "44 - Aïn Defla", "45 - Naâma", 
-  "46 - Aïn Témouchent", "47 - Ghardaïa", "48 - Relizane", "49 - El M'Ghair", "50 - El Meniaa", 
-  "51 - Ouled Djellal", "52 - Bordj Baji Mokhtar", "53 - Béni Abbès", "54 - In Salah", 
-  "55 - In Guezzam", "56 - Touggourt", "57 - Djanet", "58 - Al-M'Ghair"
-];
-
 export default function ProductPage({
   product,
   onGoBack,
@@ -62,9 +47,13 @@ export default function ProductPage({
   // Form states
   const [formName, setFormName] = useState('');
   const [formPhone, setFormPhone] = useState('');
-  const [formWilaya, setFormWilaya] = useState('16 - Alger');
+  const [formWilaya, setFormWilaya] = useState('');
   const [formCommune, setFormCommune] = useState('');
   const [deliveryType, setDeliveryType] = useState<'Stop Desk' | 'Domicile'>('Domicile');
+
+  const uniqueWilayas = getUniqueWilayas();
+  const selectedWilayaCode = formWilaya ? formWilaya.split(' - ')[0] : '';
+  const filteredCommunes = getCommunesForWilaya(selectedWilayaCode);
 
   useEffect(() => {
     const cleanW = getCleanWilayaName(formWilaya);
@@ -375,28 +364,34 @@ export default function ProductPage({
                   value={formWilaya}
                   onChange={(e) => {
                     setFormWilaya(e.target.value);
+                    setFormCommune('');
                   }}
                   className="w-full bg-[#F5F2ED]/40 border border-gray-250 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-[#FF7F50] cursor-pointer"
                 >
-                  {ALGERIAN_WILAYAS.map((w) => (
+                  <option value="">-- Sélectionnez votre Wilaya --</option>
+                  {uniqueWilayas.map((w) => (
                     <option key={w} value={w}>{w}</option>
                   ))}
                 </select>
               </div>
 
-              {/* Commune text input */}
+              {/* Commune select */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-black tracking-widest text-[#1A1A2E] uppercase">
                   Commune <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
+                <select
                   required
-                  placeholder="Ex: Dar El Beida, Bouzaréah, Kouba"
+                  disabled={!formWilaya}
                   value={formCommune}
                   onChange={(e) => setFormCommune(e.target.value)}
-                  className="w-full bg-[#F5F2ED]/40 border border-gray-250 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-[#FF7F50]"
-                />
+                  className="w-full bg-[#F5F2ED]/40 border border-gray-250 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-[#FF7F50] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <option value="">-- Sélectionnez votre Commune --</option>
+                  {filteredCommunes.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Type de livraison */}

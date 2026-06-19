@@ -53,6 +53,14 @@ export interface Order {
   deliveryFee?: number;
   productPrice?: number;
   totalPrice?: number;
+
+  // Firebase compatible fields
+  wilaya_code?: string;
+  wilaya_name?: string;
+  commune_name?: string;
+  delivery_type?: string;
+  delivery_price?: number;
+  total?: number;
 }
 
 export interface AdminAnalytics {
