@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const menHeroImage = '/src/assets/images/hero_men_fashion_1780767862327.png';
-const womenHeroImage = '/src/assets/images/hero_women_fashion_1780767878543.png';
+const menHeroImage = 'https://i.ibb.co/DHWwGw5S/Chat-GPT-Image-Jun-19-2026-04-11-34-AM-1.png';
+const womenHeroImage = 'https://i.ibb.co/kVs0BzFN/Chat-GPT-Image-Jun-19-2026-04-11-35-AM-2.png';
 
 const menImages = [
   "https://i.ibb.co/278Q2DPC/IMG-0799.jpg",
