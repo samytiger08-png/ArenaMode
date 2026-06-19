@@ -124,13 +124,24 @@ const MEN_PRODUCTS: Product[] = [
   }
 ];
 
+function detectBrand(name: string): string {
+  const n = name.toLowerCase();
+  if (n.includes('burberry')) return 'Burberry';
+  if (n.includes('fendi')) return 'Fendi';
+  if (n.includes('gucci')) return 'Gucci';
+  if (n.includes('casa blanca') || n.includes('casablanca')) return 'Casa Blanca';
+  if (n.includes('chanel')) return 'Chanel';
+  if (n.includes('dior')) return 'Christian Dior';
+  return 'Other';
+}
+
 const WOMEN_PRODUCTS: Product[] = WOMEN_SWIMWEAR_RAW.map((p, index) => {
   const isOnePiece = p[0].includes("Maillot Une Pièce");
   return {
     id: `women-${index + 1}`,
     name: p[0],
     category: isOnePiece ? 'women_one_piece' : 'women_two_piece',
-    price: 6900,
+    price: 5900,
     description: `Maillot de bain premium sélectionné pour l’été. Modèle ${p[0]}, conçu pour associer un confort d’exception et un style hautement élégant.`,
     images: [p[1]],
     image: p[1],
@@ -147,12 +158,13 @@ const WOMEN_PRODUCTS: Product[] = WOMEN_SWIMWEAR_RAW.map((p, index) => {
     isMen: false,
     isWomen: true,
     featured: index % 6 === 0,
-    inNewArrivals: index % 5 === 0
+    inNewArrivals: index % 5 === 0,
+    brand: detectBrand(p[0])
   };
 });
 
 export const INITIAL_PRODUCTS: Product[] = [
-  ...MEN_PRODUCTS,
+  ...MEN_PRODUCTS.map(p => ({ ...p, brand: detectBrand(p.name) })),
   ...WOMEN_PRODUCTS
 ];
 
@@ -183,13 +195,27 @@ export const getStoredProducts = (): Product[] => {
     return INITIAL_PRODUCTS;
   }
   // Make sure to parse and check if the prices or items are older format and update them
-  const parsed: Product[] = JSON.parse(data);
+  let parsed: Product[] = JSON.parse(data);
   const first = parsed[0];
   if (!first || first.price < 500 || parsed.length !== INITIAL_PRODUCTS.length || first.id !== 'men-1' || parsed[0]?.name !== 'Short Burberry Navy') {
     // Stale or outdated product list detected, clear storage so new beautiful DA catalog is loaded!
     localStorage.setItem('arena_products', JSON.stringify(INITIAL_PRODUCTS));
     return INITIAL_PRODUCTS;
   }
+
+  // Migrate any legacy women's products still priced at 6900 DA in local storage to 5900 DA
+  let dirty = false;
+  parsed = parsed.map(p => {
+    if (p.isWomen && p.price === 6900) {
+      dirty = true;
+      return { ...p, price: 5900 };
+    }
+    return p;
+  });
+  if (dirty) {
+    localStorage.setItem('arena_products', JSON.stringify(parsed));
+  }
+
   return parsed;
 };
 

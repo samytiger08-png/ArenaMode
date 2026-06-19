@@ -100,52 +100,34 @@ export default function ProductCard({
       </div>
 
       {/* Details Area */}
-      <div className="p-4.5 flex-1 flex flex-col justify-between">
+      <div className="p-3 sm:p-4.5 flex-1 flex flex-col justify-between">
         <div>
-          {/* Category */}
-          <span className="text-[11px] font-mono font-bold tracking-widest text-[#FF7F50] uppercase mb-1 block">
-            {product.category === 'men_swim_shorts' ? 'Shorts de bain premium' : 'Maillots de bain premium'}
-          </span>
-          
-          {/* Title */}
-          <h3 className="font-serif font-semibold text-[#1A1A2E] group-hover:text-[#FF7F50] transition-colors duration-300 line-clamp-1 text-base lg:text-lg">
+          {/* Title with maximum 2 lines and explicit height for alignment */}
+          <h3 className="font-serif font-semibold text-[#1A1A2E] group-hover:text-[#FF7F50] transition-colors duration-300 line-clamp-2 h-9 sm:h-12 text-xs sm:text-sm md:text-base leading-tight">
             {product.name}
           </h3>
-
-          {/* Sizing Preview dots */}
-          <div className="flex items-center gap-1.5 mt-2 mb-3">
-            <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">TAILLES:</span>
-            <div className="flex gap-1">
-              {product.sizes.map((s) => (
-                <span 
-                  key={s} 
-                  className="text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Price & Add Area */}
-        <div className="flex items-center justify-between border-t border-gray-100 pt-3 mt-2">
-          {/* Price */}
-          <div className="flex flex-col">
-            <span className="text-xl font-bold font-mono text-[#1A1A2E]">{product.price.toLocaleString()} DA</span>
-            <div className="flex items-center gap-0.5 mt-0.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-t border-gray-100 pt-2.5 mt-2 gap-2">
+          {/* Price & Rating */}
+          <div className="flex sm:flex-col items-baseline sm:items-start justify-between sm:justify-start gap-1">
+            <span className="text-sm sm:text-base md:text-lg font-bold font-mono text-[#1A1A2E]">
+              {product.price.toLocaleString()} DA
+            </span>
+            <div className="flex items-center gap-1">
               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-              <span className="text-[10px] font-bold text-gray-600">{product.rating.toFixed(1)}</span>
+              <span className="text-[10px] font-bold text-gray-650">{product.rating.toFixed(1)}</span>
             </div>
           </div>
 
-          <div className="flex">
+          <div className="flex w-full sm:w-auto">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect(product);
               }}
-              className="flex items-center gap-1.5 bg-[#1A1A2E] hover:bg-[#FF7F50] text-white px-3.5 py-2 rounded-xl text-xs font-black tracking-wider transition-all duration-300 shadow-sm active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-1 bg-[#1A1A2E] hover:bg-[#FF7F50] text-[#FFFFFF] px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs font-black tracking-wider transition-all duration-300 shadow-sm active:scale-95 cursor-pointer"
             >
               <span>Voir le produit</span>
             </button>

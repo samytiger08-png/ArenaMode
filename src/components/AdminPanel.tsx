@@ -59,7 +59,7 @@ export default function AdminPanel({
   // Handle Passcode login submit
   const handleAuthSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === '2026' || passcode === '3100' || passcode === '1600' || passcode === 'admin') {
+    if (passcode === 'saidarena' || passcode === '2026' || passcode === '3100' || passcode === '1600' || passcode === 'admin') {
       setIsAuthenticated(true);
       setAuthError('');
     } else {
@@ -247,8 +247,6 @@ export default function AdminPanel({
               DÉVERROUILLER LES COMMANDES
             </button>
           </form>
-          
-          <p className="text-[10px] text-gray-400 font-medium">Mot de passe de test : admin</p>
         </div>
       ) : (
         

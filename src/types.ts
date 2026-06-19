@@ -24,6 +24,7 @@ export interface Product {
   productType?: string;
   image?: string;
   currency?: string;
+  brand?: string;
 }
 
 export interface CartItem {

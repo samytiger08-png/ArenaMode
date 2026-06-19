@@ -8,7 +8,7 @@ import { SlidersHorizontal, RefreshCw, Star, ArrowUpDown } from 'lucide-react';
 import { Product } from '../types';
 import ProductCard from './ProductCard';
 
-const BRAND_ORDER = ['Burberry', 'Fendi', 'Gucci', 'Casa Blanca', 'Casablanca'];
+const BRAND_ORDER = ['Burberry', 'Fendi', 'Gucci', 'Casa Blanca', 'Casablanca', 'Chanel', 'Christian Dior'];
 
 function getBrandValue(name: string): string {
   const n = name.toLowerCase();
@@ -16,6 +16,8 @@ function getBrandValue(name: string): string {
   if (n.includes('fendi')) return 'Fendi';
   if (n.includes('gucci')) return 'Gucci';
   if (n.includes('casa blanca') || n.includes('casablanca')) return 'Casa Blanca';
+  if (n.includes('chanel')) return 'Chanel';
+  if (n.includes('dior')) return 'Christian Dior';
   return 'Other';
 }
 
@@ -25,7 +27,9 @@ const getBrandSortIndex = (name: string) => {
   if (brand === 'Fendi') return 1;
   if (brand === 'Gucci') return 2;
   if (brand === 'Casa Blanca') return 3;
-  return 4;
+  if (brand === 'Chanel') return 4;
+  if (brand === 'Christian Dior') return 5;
+  return 6;
 };
 
 interface CatalogViewProps {
@@ -45,6 +49,7 @@ export default function CatalogView({
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedSize, setSelectedSize] = useState('All');
   const [selectedColor, setSelectedColor] = useState('All');
+  const [selectedBrand, setSelectedBrand] = useState('All');
   const [sortBy, setSortBy] = useState('default'); // 'default' | 'price-asc' | 'price-desc' | 'rating'
 
   // Categories list based on gender
@@ -71,22 +76,32 @@ export default function CatalogView({
     setSelectedCategory('All');
     setSelectedSize('All');
     setSelectedColor('All');
+    setSelectedBrand('All');
     setSortBy('default');
   };
 
-  // Filter & Sort Products logic
-  const filteredProducts = useMemo(() => {
-    // 1. Filter by gender
+  const productsFilteredByOtherSelectors = useMemo(() => {
+    // Filter by everything EXCEPT brand
     let list = products.filter((p) => (isMen ? p.isMen : p.isWomen));
 
-    // 2. Filter by Category
     if (selectedCategory !== 'All') {
       list = list.filter((p) => p.category === selectedCategory);
     }
 
-    // 3. Filter by Size
     if (selectedSize !== 'All') {
       list = list.filter((p) => p.sizes.includes(selectedSize));
+    }
+
+    return list;
+  }, [products, isMen, selectedCategory, selectedSize]);
+
+  // Filter & Sort Products logic
+  const filteredProducts = useMemo(() => {
+    let list = [...productsFilteredByOtherSelectors];
+
+    // Filter by Brand
+    if (selectedBrand !== 'All') {
+      list = list.filter((p) => getBrandValue(p.name) === selectedBrand);
     }
 
     // 4. Sort
@@ -109,15 +124,15 @@ export default function CatalogView({
     }
 
     return list;
-  }, [products, isMen, selectedCategory, selectedSize, sortBy]);
+  }, [productsFilteredByOtherSelectors, selectedBrand, sortBy]);
 
   // Find the first product for each brand in filtered list
   const firstProductIdsOfBrand = useMemo(() => {
     const map: Record<string, string> = {};
-    const BRAND_KEYS = ['Burberry', 'Fendi', 'Gucci', 'Casa Blanca'];
+    const BRAND_KEYS = ['Burberry', 'Fendi', 'Gucci', 'Casa Blanca', 'Chanel', 'Christian Dior'];
     BRAND_KEYS.forEach((brand) => {
       const lowerBrand = brand.toLowerCase().replace(/\s+/g, '');
-      const found = filteredProducts.find(p => {
+      const found = productsFilteredByOtherSelectors.find(p => {
         const pBrand = getBrandValue(p.name).toLowerCase().replace(/\s+/g, '');
         return pBrand === lowerBrand;
       });
@@ -126,7 +141,7 @@ export default function CatalogView({
       }
     });
     return map;
-  }, [filteredProducts]);
+  }, [productsFilteredByOtherSelectors]);
 
   const scrollToBrand = (brandName: string) => {
     const brandLower = brandName.toLowerCase().replace(/\s+/g, '-');
@@ -242,16 +257,23 @@ export default function CatalogView({
                 MARQUE
               </span>
               <div className="flex flex-wrap gap-1.5" id="brand-shortcuts-list">
-                {['Burberry', 'Fendi', 'Gucci', 'Casa Blanca'].map((brand) => {
+                {['Burberry', 'Fendi', 'Gucci', 'Casa Blanca', 'Chanel', 'Christian Dior'].map((brand) => {
                   const available = !!firstProductIdsOfBrand[brand];
+                  const isSelected = selectedBrand === brand;
                   return (
                     <button
                       key={brand}
-                      onClick={() => available && scrollToBrand(brand)}
+                      onClick={() => {
+                        if (available) {
+                          setSelectedBrand(isSelected ? 'All' : brand);
+                        }
+                      }}
                       disabled={!available}
                       className={`text-xs px-3 py-2 rounded-xl font-bold uppercase tracking-wider transition-all border text-center ${
                         available
-                          ? 'bg-white border-gray-200 text-[#1A1A2E] hover:border-[#FF7F50] hover:text-[#FF7F50] cursor-pointer active:scale-95'
+                          ? isSelected
+                            ? 'bg-[#1A1A2E] border-[#1A1A2E] text-white shadow-sm cursor-pointer'
+                            : 'bg-white border-gray-200 text-[#1A1A2E] hover:border-[#FF7F50] hover:text-[#FF7F50] cursor-pointer active:scale-95'
                           : 'bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed opacity-50'
                       }`}
                     >
@@ -306,7 +328,7 @@ export default function CatalogView({
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" id="catalog-clothing-grid">
+            <div className={isMen ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" : "grid grid-cols-2 gap-4 sm:gap-6"} id="catalog-clothing-grid">
               {filteredProducts.map((p) => {
                 const pBrand = getBrandValue(p.name);
                 const isFirstOfBrand = firstProductIdsOfBrand[pBrand] === p.id;
