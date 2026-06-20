@@ -130,7 +130,33 @@ export default function ProductPage({
   };
 
   const handleAddToCartClick = () => {
+    console.log("Add to cart clicked");
     onAddToCart(product, selectedSize, selectedColor);
+    console.log("Product added to cart");
+
+    // Clean price into a number
+    const numericPrice = typeof product.price === 'number'
+      ? product.price
+      : Number(String(product.price).replace(/[^0-9.]/g, '')) || 0;
+
+    const w = window as any;
+    if (w.fbq) {
+      w.fbq('track', 'AddToCart', {
+        content_name: product.name,
+        content_category: product.category,
+        content_ids: [String(product.id)],
+        content_type: 'product',
+        value: Number(numericPrice),
+        currency: 'DZD'
+      });
+
+      console.log('Meta Pixel AddToCart fired', {
+        content_name: product.name,
+        value: Number(numericPrice),
+        currency: 'DZD'
+      });
+    }
+
     setCartSuccess(true);
     setTimeout(() => setCartSuccess(false), 2000);
   };
