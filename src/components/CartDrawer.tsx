@@ -74,6 +74,27 @@ export default function CartDrawer({
   const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const grandTotal = subtotal + (isUnavailable ? 0 : deliveryFee);
 
+  // Trigger Meta Pixel InitiateCheckout when entering checkout phase
+  useEffect(() => {
+    if (checkoutPhase === 'checkout' && cart.length > 0) {
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        const categoryNames = cart.map(item => item.product.isWomen ? 'Women' : 'Men');
+        const uniqueCategories = Array.from(new Set(categoryNames)).join(', ');
+
+        (window as any).fbq('track', 'InitiateCheckout', {
+          content_name: cart.map(item => item.product.name).join(', '),
+          content_category: uniqueCategories,
+          content_ids: cart.map(item => item.product.id),
+          content_type: 'product',
+          value: subtotal,
+          currency: 'DZD',
+          num_items: cart.reduce((sum, item) => sum + item.quantity, 0)
+        });
+      }
+      console.log("Meta Pixel InitiateCheckout fired");
+    }
+  }, [checkoutPhase, cart, subtotal]);
+
   // Form handle submit
   const handleCheckOutSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,6 +124,23 @@ export default function CartDrawer({
       productPrice: subtotal,
       totalPrice: grandTotal
     });
+
+    // Trigger Meta Pixel Purchase
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      const categoryNames = cart.map(item => item.product.isWomen ? 'Women' : 'Men');
+      const uniqueCategories = Array.from(new Set(categoryNames)).join(', ');
+
+      (window as any).fbq('track', 'Purchase', {
+        content_name: cart.map(item => item.product.name).join(', '),
+        content_category: uniqueCategories,
+        content_ids: cart.map(item => item.product.id),
+        content_type: 'product',
+        value: grandTotal,
+        currency: 'DZD',
+        num_items: cart.reduce((sum, item) => sum + item.quantity, 0)
+      });
+    }
+    console.log("Meta Pixel Purchase fired");
 
     setCheckoutPhase('success');
   };
