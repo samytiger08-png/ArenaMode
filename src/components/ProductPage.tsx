@@ -67,6 +67,8 @@ export default function ProductPage({
     }
   }, [formWilaya]);
 
+  const [checkoutInitiated, setCheckoutInitiated] = useState(false);
+
   useEffect(() => {
     if (product) {
       setSelectedSize(product.sizes[0] || 'M');
@@ -75,8 +77,40 @@ export default function ProductPage({
       setQuantity(1);
       setOrderPlaced(false);
       setCartSuccess(false);
+      setCheckoutInitiated(false);
+
+      // Trigger Meta Pixel ViewContent
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'ViewContent', {
+          content_name: product.name,
+          content_category: product.isWomen ? 'Women' : 'Men',
+          content_ids: [product.id],
+          content_type: 'product',
+          value: product.price,
+          currency: 'DZD'
+        });
+      }
+      console.log("Meta Pixel ViewContent fired");
     }
   }, [product]);
+
+  const triggerInitiateCheckout = () => {
+    if (!checkoutInitiated && product) {
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'InitiateCheckout', {
+          content_name: product.name,
+          content_category: product.isWomen ? 'Women' : 'Men',
+          content_ids: [product.id],
+          content_type: 'product',
+          value: product.price * quantity,
+          currency: 'DZD',
+          num_items: quantity
+        });
+      }
+      console.log("Meta Pixel InitiateCheckout fired");
+      setCheckoutInitiated(true);
+    }
+  };
 
   const cleanWilayaName = getCleanWilayaName(formWilaya);
   const feesObj = worldExpressFees[cleanWilayaName] || { desk: null, home: null };
@@ -96,7 +130,33 @@ export default function ProductPage({
   };
 
   const handleAddToCartClick = () => {
+    console.log("Add to cart clicked");
     onAddToCart(product, selectedSize, selectedColor);
+    console.log("Product added to cart");
+
+    // Clean price into a number
+    const numericPrice = typeof product.price === 'number'
+      ? product.price
+      : Number(String(product.price).replace(/[^0-9.]/g, '')) || 0;
+
+    const w = window as any;
+    if (w.fbq) {
+      w.fbq('track', 'AddToCart', {
+        content_name: product.name,
+        content_category: product.category,
+        content_ids: [String(product.id)],
+        content_type: 'product',
+        value: Number(numericPrice),
+        currency: 'DZD'
+      });
+
+      console.log('Meta Pixel AddToCart fired', {
+        content_name: product.name,
+        value: Number(numericPrice),
+        currency: 'DZD'
+      });
+    }
+
     setCartSuccess(true);
     setTimeout(() => setCartSuccess(false), 2000);
   };
@@ -137,6 +197,20 @@ export default function ProductPage({
       productPrice: pPrice,
       totalPrice: pPrice + currentFee
     });
+
+    // Trigger Meta Pixel Purchase
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'Purchase', {
+        content_name: product.name,
+        content_category: product.isWomen ? 'Women' : 'Men',
+        content_ids: [product.id],
+        content_type: 'product',
+        value: pPrice + currentFee,
+        currency: 'DZD',
+        num_items: quantity
+      });
+    }
+    console.log("Meta Pixel Purchase fired");
 
     setOrderPlaced(true);
   };
@@ -335,6 +409,7 @@ export default function ProductPage({
                   placeholder="Ex: Mohamed Benali"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
+                  onFocus={triggerInitiateCheckout}
                   className="w-full bg-[#F5F2ED]/40 border border-gray-250 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-[#FF7F50]"
                 />
               </div>
@@ -350,6 +425,7 @@ export default function ProductPage({
                   placeholder="Ex: 0552360078"
                   value={formPhone}
                   onChange={(e) => setFormPhone(e.target.value)}
+                  onFocus={triggerInitiateCheckout}
                   className="w-full bg-[#F5F2ED]/40 border border-gray-250 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-[#FF7F50]"
                 />
               </div>
@@ -366,6 +442,7 @@ export default function ProductPage({
                     setFormWilaya(e.target.value);
                     setFormCommune('');
                   }}
+                  onFocus={triggerInitiateCheckout}
                   className="w-full bg-[#F5F2ED]/40 border border-gray-250 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-[#FF7F50] cursor-pointer"
                 >
                   <option value="">-- Sélectionnez votre Wilaya --</option>
@@ -385,6 +462,7 @@ export default function ProductPage({
                   disabled={!formWilaya}
                   value={formCommune}
                   onChange={(e) => setFormCommune(e.target.value)}
+                  onFocus={triggerInitiateCheckout}
                   className="w-full bg-[#F5F2ED]/40 border border-gray-250 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-[#FF7F50] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <option value="">-- Sélectionnez votre Commune --</option>

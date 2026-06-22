@@ -88,7 +88,32 @@ export default function ProductCard({
             <button
                onClick={(e) => {
                  e.stopPropagation();
+                 console.log("Add to cart clicked");
                  onAddToCart(product, defaultSize, defaultColor);
+                 console.log("Product added to cart");
+
+                 // Clean price into a number
+                 const numericPrice = typeof product.price === 'number'
+                   ? product.price
+                   : Number(String(product.price).replace(/[^0-9.]/g, '')) || 0;
+
+                 const w = window as any;
+                 if (w.fbq) {
+                   w.fbq('track', 'AddToCart', {
+                     content_name: product.name,
+                     content_category: product.category,
+                     content_ids: [String(product.id)],
+                     content_type: 'product',
+                     value: Number(numericPrice),
+                     currency: 'DZD'
+                   });
+
+                   console.log('Meta Pixel AddToCart fired', {
+                     content_name: product.name,
+                     value: Number(numericPrice),
+                     currency: 'DZD'
+                   });
+                 }
                }}
                className="p-2.5 bg-gradient-to-r from-[#FF7F50] to-[#FFA384] text-white rounded-xl hover:from-[#40E0D0] hover:to-[#40E0D0] hover:text-[#1A1A2E] transition-colors duration-300 shadow-lg active:scale-95 cursor-pointer"
                title="Ajouter au Panier"

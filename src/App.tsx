@@ -68,6 +68,12 @@ export default function App() {
   // 3. Smooth page tab scroll adjustments
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Trigger Meta Pixel PageView on page changes
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'PageView');
+    }
+    console.log("Meta Pixel PageView fired for tab: " + currentTab);
   }, [currentTab]);
 
   // --- CORE SHOPPING CARD & ACTIONS HANDLERS ---
