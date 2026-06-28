@@ -27,7 +27,7 @@ interface ProductPageProps {
     deliveryFee: number;
     productPrice: number;
     totalPrice: number;
-  }) => void;
+  }) => Promise<void> | void;
   onAddToCart: (product: Product, size: string, color: { name: string; class: string }) => void;
 }
 
@@ -43,6 +43,7 @@ export default function ProductPage({
   const [quantity, setQuantity] = useState(1);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [cartSuccess, setCartSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form states
   const [formName, setFormName] = useState('');
@@ -161,7 +162,7 @@ export default function ProductPage({
     setTimeout(() => setCartSuccess(false), 2000);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim() || !formPhone.trim() || !formCommune.trim()) {
       alert("Veuillez remplir tous les champs obligatoires.");
@@ -180,39 +181,48 @@ export default function ProductPage({
     const currentFee = deliveryType === 'Stop Desk' ? (feesObj.desk || 0) : (feesObj.home || 0);
     const pPrice = product.price * quantity;
 
-    onPlaceDirectOrder({
-      customerName: formName,
-      phone: formPhone,
-      wilaya: formWilaya,
-      commune: formCommune,
-      productId: product.id,
-      productName: product.name,
-      category: product.category === 'men_swim_shorts' ? 'Shorts de bain premium' : 'Maillots de bain premium',
-      size: selectedSize,
-      colorOrModel: selectedColor.name,
-      quantity: quantity,
-      priceDA: product.price,
-      deliveryType,
-      deliveryFee: currentFee,
-      productPrice: pPrice,
-      totalPrice: pPrice + currentFee
-    });
-
-    // Trigger Meta Pixel Purchase
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq('track', 'Purchase', {
-        content_name: product.name,
-        content_category: product.isWomen ? 'Women' : 'Men',
-        content_ids: [product.id],
-        content_type: 'product',
-        value: pPrice + currentFee,
-        currency: 'DZD',
-        num_items: quantity
+    setIsSubmitting(true);
+    try {
+      // Call state update in parent and await saving
+      await onPlaceDirectOrder({
+        customerName: formName,
+        phone: formPhone,
+        wilaya: formWilaya,
+        commune: formCommune,
+        productId: product.id,
+        productName: product.name,
+        category: product.category === 'men_swim_shorts' ? 'Shorts de bain premium' : 'Maillots de bain premium',
+        size: selectedSize,
+        colorOrModel: selectedColor.name,
+        quantity: quantity,
+        priceDA: product.price,
+        deliveryType,
+        deliveryFee: currentFee,
+        productPrice: pPrice,
+        totalPrice: pPrice + currentFee
       });
-    }
-    console.log("Meta Pixel Purchase fired");
 
-    setOrderPlaced(true);
+      // Trigger Meta Pixel Purchase
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'Purchase', {
+          content_name: product.name,
+          content_category: product.isWomen ? 'Women' : 'Men',
+          content_ids: [product.id],
+          content_type: 'product',
+          value: pPrice + currentFee,
+          currency: 'DZD',
+          num_items: quantity
+        });
+      }
+      console.log("Meta Pixel Purchase fired");
+
+      setOrderPlaced(true);
+    } catch (err) {
+      console.error("Error placing direct order:", err);
+      alert("Une erreur s'est produite lors de la validation de la commande. Veuillez réessayer.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -563,11 +573,11 @@ export default function ProductPage({
               {/* Submit Order action */}
               <button
                 type="submit"
-                disabled={isUnavailable}
+                disabled={isUnavailable || isSubmitting}
                 className="w-full bg-[#FF7F50] hover:bg-[#1A1A2E] disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed text-white py-4 px-6 rounded-2xl font-black text-xs tracking-widest uppercase transition-all duration-300 shadow-md active:scale-95 cursor-pointer flex items-center justify-center gap-2"
               >
                 <PhoneCall className="h-4 w-4 text-white" />
-                <span>CONFIRMER LA COMMANDE</span>
+                <span>{isSubmitting ? 'ENVOI EN COURS...' : 'CONFIRMER LA COMMANDE'}</span>
               </button>
             </form>
           </div>

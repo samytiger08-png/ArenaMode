@@ -1,0 +1,32 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "Represents a customer purchase order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "customerName": { "type": "string" },
+        "phone": { "type": "string" },
+        "wilaya": { "type": "string" },
+        "commune": { "type": "string" },
+        "productId": { "type": "string" },
+        "productName": { "type": "string" },
+        "category": { "type": "string" },
+        "size": { "type": "string" },
+        "colorOrModel": { "type": "string" },
+        "quantity": { "type": "number" },
+        "priceDA": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "createdAt", "customerName", "phone", "wilaya", "commune", "productId", "productName", "category", "size", "colorOrModel", "quantity", "priceDA", "status"]
+    }
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Store all customer orders"
+    }
+  }
+}

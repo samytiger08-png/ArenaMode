@@ -163,9 +163,187 @@ const WOMEN_PRODUCTS: Product[] = WOMEN_SWIMWEAR_RAW.map((p, index) => {
   };
 });
 
+export const WOMEN_BEACHWEAR_PRODUCTS: Product[] = [
+  {
+    id: 'women-beachwear-1',
+    name: 'Robe Plage 01',
+    category: 'women_beachwear',
+    price: 4900,
+    description: 'Robe de plage premium de la collection Robe Plage. Légère, fluide et élégante, parfaite pour vos journées d’été au bord de l’eau.',
+    images: [
+      'https://i.ibb.co/TDP4BTnn/091849e1-19e1-43db-8c14-d9be7c61db8d.jpg',
+      'https://i.ibb.co/fzGNfTLy/13a38c43-08a8-40e2-a031-6cd1b1d93b83.jpg'
+    ],
+    image: 'https://i.ibb.co/TDP4BTnn/091849e1-19e1-43db-8c14-d9be7c61db8d.jpg',
+    gender: 'femmes',
+    displayCategory: 'Robes de plage',
+    productType: 'Robe plage',
+    currency: 'DA',
+    rating: 4.8,
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: [
+      { name: 'White', class: 'bg-white border' },
+      { name: 'Beige', class: 'bg-[#E5D3B3]' },
+      { name: 'Black', class: 'bg-black' }
+    ],
+    stock: 25,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  },
+  {
+    id: 'women-beachwear-2',
+    name: 'Robe Plage 02',
+    category: 'women_beachwear',
+    price: 4900,
+    description: 'Robe de plage premium de la collection Robe Plage. Légère, fluide et élégante, parfaite pour vos journées d’été au bord de l’eau.',
+    images: [
+      'https://i.ibb.co/m59mtH7t/40daf547-c079-4eca-8814-715e96f6c743.jpg',
+      'https://i.ibb.co/gHv4fD8/7f60e4e8-397e-41e0-b37f-3212091aa85c.jpg'
+    ],
+    image: 'https://i.ibb.co/m59mtH7t/40daf547-c079-4eca-8814-715e96f6c743.jpg',
+    gender: 'femmes',
+    displayCategory: 'Robes de plage',
+    productType: 'Robe plage',
+    currency: 'DA',
+    rating: 4.9,
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: [
+      { name: 'White', class: 'bg-white border' },
+      { name: 'Beige', class: 'bg-[#E5D3B3]' },
+      { name: 'Black', class: 'bg-black' }
+    ],
+    stock: 20,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  },
+  {
+    id: 'women-beachwear-3',
+    name: 'Robe Plage 03',
+    category: 'women_beachwear',
+    price: 4900,
+    description: 'Robe de plage premium de la collection Robe Plage. Légère, fluide et élégante, parfaite pour vos journées d’été au bord de l’eau.',
+    images: [
+      'https://i.ibb.co/1fzmJs33/323a637d-5ded-4006-a8ac-7389e94a109b.jpg',
+      'https://i.ibb.co/wrdC7x9D/4e65449b-57d8-4014-ab39-54d7808b2654.jpg'
+    ],
+    image: 'https://i.ibb.co/1fzmJs33/323a637d-5ded-4006-a8ac-7389e94a109b.jpg',
+    gender: 'femmes',
+    displayCategory: 'Robes de plage',
+    productType: 'Robe plage',
+    currency: 'DA',
+    rating: 4.7,
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: [
+      { name: 'White', class: 'bg-white border' },
+      { name: 'Beige', class: 'bg-[#E5D3B3]' },
+      { name: 'Black', class: 'bg-black' }
+    ],
+    stock: 30,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  },
+  {
+    id: 'women-beachwear-4',
+    name: 'Robe Plage 04',
+    category: 'women_beachwear',
+    price: 4900,
+    description: 'Robe de plage premium de la collection Robe Plage. Légère, fluide et élégante, parfaite pour vos journées d’été au bord de l’eau.',
+    images: [
+      'https://i.ibb.co/4w3Ppkfb/f1aca7f6-a38d-4620-8e65-fa4f2fda49c5.jpg',
+      'https://i.ibb.co/xSPFxZhG/c15eac41-2d02-4fc6-a642-c88e2dcc08a2.jpg'
+    ],
+    image: 'https://i.ibb.co/4w3Ppkfb/f1aca7f6-a38d-4620-8e65-fa4f2fda49c5.jpg',
+    gender: 'femmes',
+    displayCategory: 'Robes de plage',
+    productType: 'Robe plage',
+    currency: 'DA',
+    rating: 4.8,
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: [
+      { name: 'White', class: 'bg-white border' },
+      { name: 'Beige', class: 'bg-[#E5D3B3]' },
+      { name: 'Black', class: 'bg-black' }
+    ],
+    stock: 18,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  },
+  {
+    id: 'women-beachwear-5',
+    name: 'Robe Plage 05',
+    category: 'women_beachwear',
+    price: 4900,
+    description: 'Robe de plage premium de la collection Robe Plage. Légère, fluide et élégante, parfaite pour vos journées d’été au bord de l’eau.',
+    images: [
+      'https://i.ibb.co/TMgjzD23/8af328ca-2e0a-41ef-a870-2391ac0346eb.jpg',
+      'https://i.ibb.co/7tHmpBTc/457b8bfb-98b1-459f-9461-74456dfe96bc.jpg'
+    ],
+    image: 'https://i.ibb.co/TMgjzD23/8af328ca-2e0a-41ef-a870-2391ac0346eb.jpg',
+    gender: 'femmes',
+    displayCategory: 'Robes de plage',
+    productType: 'Robe plage',
+    currency: 'DA',
+    rating: 4.6,
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: [
+      { name: 'White', class: 'bg-white border' },
+      { name: 'Beige', class: 'bg-[#E5D3B3]' },
+      { name: 'Black', class: 'bg-black' }
+    ],
+    stock: 22,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  },
+  {
+    id: 'women-beachwear-6',
+    name: 'Robe Plage 06',
+    category: 'women_beachwear',
+    price: 4900,
+    description: 'Robe de plage premium de la collection Robe Plage. Légère, fluide et élégante, parfaite pour vos journées d’été au bord de l’eau.',
+    images: [
+      'https://i.ibb.co/bg2KkkKw/3ab02db8-5435-430e-aa23-6a3f116078ea.jpg',
+      'https://i.ibb.co/pv72KJWs/00ca1d23-1805-4c3f-9c03-291844c04791.jpg'
+    ],
+    image: 'https://i.ibb.co/bg2KkkKw/3ab02db8-5435-430e-aa23-6a3f116078ea.jpg',
+    gender: 'femmes',
+    displayCategory: 'Robes de plage',
+    productType: 'Robe plage',
+    currency: 'DA',
+    rating: 4.9,
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: [
+      { name: 'White', class: 'bg-white border' },
+      { name: 'Beige', class: 'bg-[#E5D3B3]' },
+      { name: 'Black', class: 'bg-black' }
+    ],
+    stock: 15,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  }
+];
+
 export const INITIAL_PRODUCTS: Product[] = [
   ...MEN_PRODUCTS.map(p => ({ ...p, brand: detectBrand(p.name) })),
-  ...WOMEN_PRODUCTS
+  ...WOMEN_PRODUCTS,
+  ...WOMEN_BEACHWEAR_PRODUCTS
 ];
 
 export const INITIAL_ORDERS: Order[] = [

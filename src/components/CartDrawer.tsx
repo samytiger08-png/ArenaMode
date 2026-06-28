@@ -23,7 +23,7 @@ interface CartDrawerProps {
     deliveryFee: number;
     productPrice: number;
     totalPrice: number;
-  }) => void;
+  }) => Promise<void> | void;
 }
 
 export default function CartDrawer({
@@ -38,6 +38,7 @@ export default function CartDrawer({
 
   // Checkout process phases: 'cart' | 'checkout' | 'success'
   const [checkoutPhase, setCheckoutPhase] = useState<'cart' | 'checkout' | 'success'>('cart');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Custom Form: No email, no address textarea, only Wilaya dropdown & Commune
   const [formName, setFormName] = useState('');
@@ -96,7 +97,7 @@ export default function CartDrawer({
   }, [checkoutPhase, cart, subtotal]);
 
   // Form handle submit
-  const handleCheckOutSubmit = (e: React.FormEvent) => {
+  const handleCheckOutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim() || !formPhone.trim() || !formCommune.trim()) {
       alert('Veuillez remplir tous les champs du formulaire.');
@@ -113,36 +114,44 @@ export default function CartDrawer({
     const newOrderId = `AM-${randomNum}`;
     setLastPlacedOrderId(newOrderId);
 
-    // Call state update in parent
-    onPlaceOrder({
-      name: formName,
-      phone: formPhone,
-      wilaya: formWilaya,
-      commune: formCommune,
-      deliveryType,
-      deliveryFee,
-      productPrice: subtotal,
-      totalPrice: grandTotal
-    });
-
-    // Trigger Meta Pixel Purchase
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      const categoryNames = cart.map(item => item.product.isWomen ? 'Women' : 'Men');
-      const uniqueCategories = Array.from(new Set(categoryNames)).join(', ');
-
-      (window as any).fbq('track', 'Purchase', {
-        content_name: cart.map(item => item.product.name).join(', '),
-        content_category: uniqueCategories,
-        content_ids: cart.map(item => item.product.id),
-        content_type: 'product',
-        value: grandTotal,
-        currency: 'DZD',
-        num_items: cart.reduce((sum, item) => sum + item.quantity, 0)
+    setIsSubmitting(true);
+    try {
+      // Call state update in parent and await saving
+      await onPlaceOrder({
+        name: formName,
+        phone: formPhone,
+        wilaya: formWilaya,
+        commune: formCommune,
+        deliveryType,
+        deliveryFee,
+        productPrice: subtotal,
+        totalPrice: grandTotal
       });
-    }
-    console.log("Meta Pixel Purchase fired");
 
-    setCheckoutPhase('success');
+      // Trigger Meta Pixel Purchase
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        const categoryNames = cart.map(item => item.product.isWomen ? 'Women' : 'Men');
+        const uniqueCategories = Array.from(new Set(categoryNames)).join(', ');
+
+        (window as any).fbq('track', 'Purchase', {
+          content_name: cart.map(item => item.product.name).join(', '),
+          content_category: uniqueCategories,
+          content_ids: cart.map(item => item.product.id),
+          content_type: 'product',
+          value: grandTotal,
+          currency: 'DZD',
+          num_items: cart.reduce((sum, item) => sum + item.quantity, 0)
+        });
+      }
+      console.log("Meta Pixel Purchase fired");
+
+      setCheckoutPhase('success');
+    } catch (err) {
+      console.error("Error placing order:", err);
+      alert("Une erreur s'est produite lors de la validation de la commande. Veuillez réessayer.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -459,12 +468,12 @@ export default function CartDrawer({
                 </button>
                 <button
                   type="submit"
-                  disabled={isUnavailable}
+                  disabled={isUnavailable || isSubmitting}
                   className="w-2/3 flex items-center justify-center gap-2 bg-[#FF7F50] hover:bg-[#1A1A2E] disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed text-white py-4 px-6 rounded-xl font-black text-xs tracking-widest uppercase transition-all duration-300 shadow-md active:scale-95 cursor-pointer"
                   id="place-order-submit-btn"
                 >
                   <ShieldCheck className="h-4.5 w-4.5 text-white" />
-                  <span>CONFIRMER MA COMMANDE</span>
+                  <span>{isSubmitting ? 'ENVOI EN COURS...' : 'CONFIRMER MA COMMANDE'}</span>
                 </button>
               </div>
             </div>

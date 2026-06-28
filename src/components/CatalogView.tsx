@@ -64,7 +64,7 @@ export default function CatalogView({
         { id: 'All', label: 'All' },
         { id: 'women_one_piece', label: 'Maillots une pièce' },
         { id: 'women_two_piece', label: 'Maillots deux pièces' },
-        { id: 'women_swimwear', label: 'Maillots de bain' }
+        { id: 'women_beachwear', label: 'Robes de plage' }
       ];
     }
   }, [isMen]);

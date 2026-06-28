@@ -16,10 +16,15 @@ import ProductPage from './components/ProductPage';
 import { Product, CartItem, Order, CampaignSettings } from './types';
 import { 
   getStoredProducts, saveStoredProducts, 
-  getStoredOrders, saveStoredOrders, 
-  getStoredCampaign, saveStoredCampaign,
+  getStoredOrders, getStoredCampaign, saveStoredCampaign,
   getCleanWilayaName
 } from './data';
+import { 
+  fetchOrdersFromFirebase, 
+  saveOrderToFirebase, 
+  updateOrderInFirebase, 
+  deleteOrderFromFirebase 
+} from './lib/firebase';
 
 export default function App() {
   // Navigation Routing Tab State - Includes 'product' for the standalone view
@@ -46,7 +51,6 @@ export default function App() {
   // 1. Initial State Seed Loading on Component Mount
   useEffect(() => {
     setProducts(getStoredProducts());
-    setOrders(getStoredOrders());
     setCampaign(getStoredCampaign());
 
     // Load Cart from localStorage if any
@@ -58,6 +62,18 @@ export default function App() {
         console.error("Failed loading saved cart:", err);
       }
     }
+
+    // Load Orders from Firebase
+    const loadOrders = async () => {
+      try {
+        const fbOrders = await fetchOrdersFromFirebase();
+        setOrders(fbOrders);
+      } catch (err) {
+        console.error("Failed loading orders from Firebase:", err);
+        setOrders(getStoredOrders());
+      }
+    };
+    loadOrders();
   }, []);
 
   // 2. Synchronize Shopping Cart changes to localStorage
@@ -137,7 +153,7 @@ export default function App() {
   };
 
   // Place order for each item in the cart (individual tracking)
-  const handlePlaceOrder = (customerInfo: { 
+  const handlePlaceOrder = async (customerInfo: { 
     name: string; 
     phone: string; 
     wilaya: string; 
@@ -196,16 +212,22 @@ export default function App() {
     setProducts(updatedProducts);
     saveStoredProducts(updatedProducts);
 
+    // Save to Firebase first, wait for completion
+    try {
+      await Promise.all(newOrders.map(ord => saveOrderToFirebase(ord)));
+    } catch (err) {
+      console.error("Error saving orders to Firebase:", err);
+    }
+
     const updatedOrders = [...newOrders, ...orders];
     setOrders(updatedOrders);
-    saveStoredOrders(updatedOrders);
 
     // Reset shopping bag
     setCart([]);
   };
 
   // Place a single direct order from the standalone product detail page
-  const handlePlaceDirectOrder = (orderData: {
+  const handlePlaceDirectOrder = async (orderData: {
     customerName: string;
     phone: string;
     wilaya: string;
@@ -268,9 +290,15 @@ export default function App() {
     setProducts(updatedProducts);
     saveStoredProducts(updatedProducts);
 
+    // Save to Firebase first, wait for completion
+    try {
+      await saveOrderToFirebase(newOrder);
+    } catch (err) {
+      console.error("Error saving direct order to Firebase:", err);
+    }
+
     const updatedOrders = [newOrder, ...orders];
     setOrders(updatedOrders);
-    saveStoredOrders(updatedOrders);
   };
 
   const handleSelectProduct = (product: Product) => {
@@ -288,9 +316,30 @@ export default function App() {
     saveStoredProducts(updatedProducts);
   };
 
-  const handleUpdateOrders = (updatedOrders: Order[]) => {
+  const handleUpdateOrders = async (updatedOrders: Order[]) => {
+    // Determine deleted and modified orders to update on Firebase
+    const deletedOrders = orders.filter(o => !updatedOrders.some(uo => uo.id === o.id));
+    for (const dOrd of deletedOrders) {
+      try {
+        await deleteOrderFromFirebase(dOrd.id);
+      } catch (err) {
+        console.error("Failed to delete order from Firebase:", err);
+      }
+    }
+
+    const modifiedOrders = updatedOrders.filter(uo => {
+      const original = orders.find(o => o.id === uo.id);
+      return original && original.status !== uo.status;
+    });
+    for (const mOrd of modifiedOrders) {
+      try {
+        await updateOrderInFirebase(mOrd.id, { status: mOrd.status });
+      } catch (err) {
+        console.error("Failed to update order status in Firebase:", err);
+      }
+    }
+
     setOrders(updatedOrders);
-    saveStoredOrders(updatedOrders);
   };
 
   return (
