@@ -85,6 +85,7 @@ export default function CatalogView({
     } else {
       return [
         { id: 'All', label: 'All' },
+        { id: 'women_swimwear', label: 'Maillots (Tout)' },
         { id: 'women_one_piece', label: 'Maillots une pièce' },
         { id: 'women_two_piece', label: 'Maillots deux pièces' },
         { id: 'women_beachwear', label: 'Robes de plage' },
@@ -110,7 +111,11 @@ export default function CatalogView({
     let list = products.filter((p) => (isMen ? p.isMen : p.isWomen));
 
     if (selectedCategory !== 'All') {
-      list = list.filter((p) => p.category === selectedCategory);
+      if (selectedCategory === 'women_swimwear') {
+        list = list.filter((p) => p.category === 'women_one_piece' || p.category === 'women_two_piece');
+      } else {
+        list = list.filter((p) => p.category === selectedCategory);
+      }
     }
 
     if (selectedSize !== 'All') {
@@ -225,7 +230,7 @@ export default function CatalogView({
                   {
                     name: "Maillots",
                     image: "https://i.ibb.co/99BTMFFP/4-BA16-D5-B-B640-4990-AC88-8062-DEA6518-B.png",
-                    categoryId: "women_one_piece",
+                    categoryId: "women_swimwear",
                     tagline: "Sélection Branded"
                   },
                   {
