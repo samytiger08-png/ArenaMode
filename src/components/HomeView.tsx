@@ -59,9 +59,6 @@ export default function HomeView({
     
     partnersLabel: isFR ? "Vitrine des Marques Estivales Phares" : "Trending Summer Brands Showcase",
     
-    conciergeLabel: isFR ? "★ Stylistes Privés 24h/24" : "★ 24/7 Wardrobe Stylists",
-    conciergeTitle: isFR ? "Besoin d'aide pour votre style ?" : "Need Help Choosing Your Style?",
-    conciergeDesc: isFR ? "Aucune inquiétude. Notre service de conciergerie haut de gamme basé à Alger vous conseille instantanément par chat pour adapter tailles et couleurs à vos envies." : "No problem. Let our luxury Algerian concierge recommend the exact swimming cutouts or sizes to matching colors over live chat advice anytime.",
     conciergeBtn: isFR ? "CONTACTEZ-NOUS" : "CONTACT US",
     chatBtn: isFR ? "DISCUTER VIA WHATSAPP" : "CHAT VIA WHATSAPP",
   };

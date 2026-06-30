@@ -350,7 +350,7 @@ export default function AdminPanel({
                           <td className="py-2.5 text-center">
                             <div className="flex flex-col">
                               <span className="bg-[#F5F2ED] text-gray-600 text-[10px] px-2 py-0.5 rounded-full font-bold border inline-block mx-auto">
-                                {p.category === 'men_swim_shorts' ? 'Shorts Homme' : p.category === 'women_beachwear' ? 'Robe Plage' : 'Maillot Femme'}
+                                {p.category === 'men_swim_shorts' ? 'Shorts Homme' : p.category === 'women_beachwear' ? 'Robe Plage' : p.category === 'women_pareo' ? 'Paréo' : p.category === 'women_soiree' ? 'Haut Soirée' : 'Maillot Femme'}
                               </span>
                             </div>
                           </td>
@@ -600,7 +600,7 @@ export default function AdminPanel({
                         </div>
                         <div className="flex-1 text-left space-y-0.5">
                           <h4 className="font-serif text-xs font-black text-gray-800 line-clamp-1">{p.name}</h4>
-                          <span className="text-[9px] font-bold text-gray-400 tracking-wider block uppercase">{p.category === 'men_swim_shorts' ? 'Shorts Homme' : p.category === 'women_beachwear' ? 'Robe Plage' : 'Maillots Femme'}</span>
+                          <span className="text-[9px] font-bold text-gray-400 tracking-wider block uppercase">{p.category === 'men_swim_shorts' ? 'Shorts Homme' : p.category === 'women_beachwear' ? 'Robe Plage' : p.category === 'women_pareo' ? 'Paréo' : p.category === 'women_soiree' ? 'Haut Soirée' : 'Maillots Femme'}</span>
                         </div>
                         <div className="text-right flex flex-col justify-center">
                           <span className="font-mono text-xs font-black text-red-600 bg-red-100/60 px-2 py-1 rounded select-none uppercase">
@@ -624,7 +624,7 @@ export default function AdminPanel({
                       <div key={p.id} className="flex items-center justify-between gap-3 p-2 bg-gray-50/60 rounded-xl border border-gray-100">
                         <div className="flex-1 text-left min-w-0">
                           <span className="font-serif font-bold text-xs text-gray-800 block line-clamp-1">{p.name}</span>
-                          <span className="text-[9px] text-gray-400 uppercase font-bold tracking-wider">{p.category === 'men_swim_shorts' ? 'Shorts' : p.category === 'women_beachwear' ? 'Robe' : 'Maillot'}</span>
+                          <span className="text-[9px] text-gray-400 uppercase font-bold tracking-wider">{p.category === 'men_swim_shorts' ? 'Shorts' : p.category === 'women_beachwear' ? 'Robe' : p.category === 'women_pareo' ? 'Paréo' : p.category === 'women_soiree' ? 'Haut Soirée' : 'Maillot'}</span>
                         </div>
 
                         {/* Adjust Stocks Quick counters */}
@@ -732,6 +732,8 @@ export default function AdminPanel({
                         <option value="women_one_piece">Maillot 1 pièce premium (Femme)</option>
                         <option value="women_two_piece">Maillot 2 pièces premium (Femme)</option>
                         <option value="women_beachwear">Robe de plage premium (Femme)</option>
+                        <option value="women_pareo">Paréo premium (Femme)</option>
+                        <option value="women_soiree">Haut de soirée premium (Femme)</option>
                       </select>
                     </div>
 

@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
-import { SlidersHorizontal, RefreshCw, Star, ArrowUpDown } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { SlidersHorizontal, RefreshCw, Star, ArrowUpDown, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Product } from '../types';
 import ProductCard from './ProductCard';
 
@@ -45,6 +46,28 @@ export default function CatalogView({
   onSelect,
   onAddToCart,
 }: CatalogViewProps) {
+  // Women overlay state
+  const [showWomenOverlay, setShowWomenOverlay] = useState(false);
+
+  useEffect(() => {
+    if (!isMen) {
+      setShowWomenOverlay(true);
+    } else {
+      setShowWomenOverlay(false);
+    }
+  }, [isMen]);
+
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setShowWomenOverlay(false);
+    setTimeout(() => {
+      const element = document.getElementById('catalog-products-area');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
   // Filters state
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedSize, setSelectedSize] = useState('All');
@@ -64,7 +87,9 @@ export default function CatalogView({
         { id: 'All', label: 'All' },
         { id: 'women_one_piece', label: 'Maillots une pièce' },
         { id: 'women_two_piece', label: 'Maillots deux pièces' },
-        { id: 'women_beachwear', label: 'Robes de plage' }
+        { id: 'women_beachwear', label: 'Robes de plage' },
+        { id: 'women_pareo', label: 'Paréos' },
+        { id: 'women_soiree', label: 'Hauts de soirée' }
       ];
     }
   }, [isMen]);
@@ -155,6 +180,113 @@ export default function CatalogView({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in" id="catalog-view-root">
       
+      {/* 0. WOMEN ENTRY CATEGORY OVERLAY */}
+      <AnimatePresence>
+        {showWomenOverlay && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto bg-[#F5F2ED]/75 backdrop-blur-3xl select-none"
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+          >
+            {/* Ambient liquid blobs for organic premium feel */}
+            <div className="absolute top-[15%] left-[15%] w-72 h-72 sm:w-96 sm:h-96 bg-[#FF7F50]/15 rounded-full blur-[100px] sm:blur-[130px] pointer-events-none" />
+            <div className="absolute bottom-[15%] right-[15%] w-72 h-72 sm:w-96 sm:h-96 bg-[#40E0D0]/15 rounded-full blur-[100px] sm:blur-[130px] pointer-events-none" />
+            
+            {/* Close button X */}
+            <button
+              onClick={() => setShowWomenOverlay(false)}
+              className="absolute top-6 right-6 z-50 h-12 w-12 rounded-full border border-gray-950/10 bg-white/40 backdrop-blur-md flex items-center justify-center text-gray-950 hover:bg-white hover:border-gray-950/20 shadow-xs transition-all duration-300 hover:rotate-90 cursor-pointer"
+              aria-label="Fermer"
+            >
+              <X className="h-5 w-5 text-gray-900" />
+            </button>
+
+            <div className="relative z-10 max-w-4xl w-full mx-auto text-center py-8 px-2 flex flex-col items-center">
+              {/* Luxury header */}
+              <div className="mb-8 md:mb-12 space-y-3">
+                <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-[#FF7F50] uppercase">
+                  Arena Mode Alger
+                </span>
+                <h2 className="text-3xl md:text-5xl font-serif font-black tracking-tight text-gray-950 uppercase">
+                  Vestiaire d'Été
+                </h2>
+                <div className="h-[1px] w-12 bg-[#FF7F50]/40 mx-auto my-3" />
+                <p className="text-gray-500 text-xs sm:text-sm font-medium max-w-md mx-auto leading-relaxed">
+                  Découvrez nos sélections exclusives pour la plage, les journées ensoleillées et vos soirées d'été.
+                </p>
+              </div>
+
+              {/* 4 Premium Category Cards */}
+              <div className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl">
+                {[
+                  {
+                    name: "Maillots",
+                    image: "https://i.ibb.co/99BTMFFP/4-BA16-D5-B-B640-4990-AC88-8062-DEA6518-B.png",
+                    categoryId: "women_one_piece",
+                    tagline: "Sélection Branded"
+                  },
+                  {
+                    name: "Haut de Soirée",
+                    image: "https://i.ibb.co/nMJBTfV7/6d05695f-4e01-4de5-92d9-d76200814c95.jpg",
+                    categoryId: "women_soiree",
+                    tagline: "Éclat Satiné"
+                  },
+                  {
+                    name: "Paréo Femme",
+                    image: "https://i.ibb.co/fcQTKDJ/IMG-0276.jpg",
+                    categoryId: "women_pareo",
+                    tagline: "Légèreté Voile"
+                  },
+                  {
+                    name: "Robe de Plage",
+                    image: "https://i.ibb.co/xSPFxZhG/c15eac41-2d02-4fc6-a642-c88e2dcc08a2.jpg",
+                    categoryId: "women_beachwear",
+                    tagline: "Solaire & Fluide"
+                  }
+                ].map((cat, idx) => (
+                  <motion.button
+                    key={cat.name}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 * idx, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={() => handleCategoryClick(cat.categoryId)}
+                    className="group relative aspect-[4/5] sm:aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-xs hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 border border-white/20 cursor-pointer text-left w-full"
+                  >
+                    {/* Image Layer */}
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      referrerPolicy="no-referrer"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    {/* Card labels */}
+                    <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 flex flex-col justify-end text-left">
+                      <span className="text-[9px] font-mono font-bold tracking-widest text-[#40E0D0] uppercase mb-1">
+                        {cat.tagline}
+                      </span>
+                      <h3 className="text-sm sm:text-lg font-serif font-extrabold text-white uppercase tracking-tight group-hover:text-[#40E0D0] transition-colors flex items-center gap-1">
+                        {cat.name}
+                        <span className="inline-block transform translate-x-0 group-hover:translate-x-1.5 transition-transform duration-300">
+                          →
+                        </span>
+                      </h3>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 1. HERO BANNER HEADER */}
       <div 
         className="w-full bg-[#1A1A2E] rounded-3xl p-8 md:p-12 text-white mb-10 relative overflow-hidden shadow-md text-left"

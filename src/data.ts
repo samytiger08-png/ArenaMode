@@ -340,10 +340,278 @@ export const WOMEN_BEACHWEAR_PRODUCTS: Product[] = [
   }
 ];
 
+export const WOMEN_PAREO_PRODUCTS: Product[] = [
+  {
+    id: 'women-pareo-1',
+    name: 'Paréo Dior Bleu',
+    category: 'women_pareo',
+    price: 2400,
+    description: 'Paréo de plage premium en voile ultra-léger et soyeux. Ajustable à la taille, il offre un style raffiné et aérien pour accompagner vos maillots.',
+    images: [
+      'https://i.ibb.co/fcQTKDJ/IMG-0276.jpg'
+    ],
+    image: 'https://i.ibb.co/fcQTKDJ/IMG-0276.jpg',
+    gender: 'femmes',
+    displayCategory: 'Paréos',
+    productType: 'Paréo',
+    currency: 'DA',
+    rating: 4.8,
+    sizes: ['S', 'M', 'L'],
+    colors: [
+      { name: 'Bleu', class: 'bg-blue-500' }
+    ],
+    stock: 25,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Christian Dior'
+  },
+  {
+    id: 'women-pareo-dior-gris',
+    name: 'Paréo Dior Gris',
+    category: 'women_pareo',
+    price: 2400,
+    description: 'Paréo de plage premium signé Dior. Fabriqué en voile de haute qualité, fluide et léger, idéal pour compléter vos maillots de bain avec sophistication.',
+    images: [
+      'https://i.ibb.co/zcGY6r9/IMG-0280.jpg'
+    ],
+    image: 'https://i.ibb.co/zcGY6r9/IMG-0280.jpg',
+    gender: 'femmes',
+    displayCategory: 'Paréos',
+    productType: 'Paréo',
+    currency: 'DA',
+    rating: 4.8,
+    sizes: ['S', 'M', 'L'],
+    colors: [
+      { name: 'Gris', class: 'bg-gray-400' }
+    ],
+    stock: 18,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Christian Dior'
+  },
+  {
+    id: 'women-pareo-dior-bordeaux',
+    name: 'Paréo Dior Bordeaux',
+    category: 'women_pareo',
+    price: 2400,
+    description: 'Paréo de plage premium signé Dior en teinte bordeaux royale. Élégant, soyeux et facile à nouer pour un look estival irrésistible.',
+    images: [
+      'https://i.ibb.co/F4c7GPPf/IMG-0278.jpg'
+    ],
+    image: 'https://i.ibb.co/F4c7GPPf/IMG-0278.jpg',
+    gender: 'femmes',
+    displayCategory: 'Paréos',
+    productType: 'Paréo',
+    currency: 'DA',
+    rating: 4.9,
+    sizes: ['S', 'M', 'L'],
+    colors: [
+      { name: 'Bordeaux', class: 'bg-red-800' }
+    ],
+    stock: 15,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Christian Dior'
+  },
+  {
+    id: 'women-pareo-dior-noir-blanc',
+    name: 'Paréo Dior Noir & Blanc',
+    category: 'women_pareo',
+    price: 2400,
+    description: 'Paréo de plage premium Dior au design contrasté noir et blanc chic. Le mariage parfait entre style graphique moderne et légèreté absolue.',
+    images: [
+      'https://i.ibb.co/FqCd65XK/IMG-0277.jpg'
+    ],
+    image: 'https://i.ibb.co/FqCd65XK/IMG-0277.jpg',
+    gender: 'femmes',
+    displayCategory: 'Paréos',
+    productType: 'Paréo',
+    currency: 'DA',
+    rating: 4.7,
+    sizes: ['S', 'M', 'L'],
+    colors: [
+      { name: 'Noir & Blanc', class: 'bg-gradient-to-r from-black to-white' }
+    ],
+    stock: 20,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Christian Dior'
+  },
+  {
+    id: 'women-pareo-fendi-noir-or',
+    name: 'Paréo Fendi Noir & Or',
+    category: 'women_pareo',
+    price: 2400,
+    description: 'Paréo de plage premium Fendi Noir et Or éclatant. Un accessoire de luxe au motif iconique qui sublimera vos après-midis au bord de l’eau.',
+    images: [
+      'https://i.ibb.co/DjwGymk/IMG-0275.jpg'
+    ],
+    image: 'https://i.ibb.co/DjwGymk/IMG-0275.jpg',
+    gender: 'femmes',
+    displayCategory: 'Paréos',
+    productType: 'Paréo',
+    currency: 'DA',
+    rating: 4.9,
+    sizes: ['S', 'M', 'L'],
+    colors: [
+      { name: 'Noir & Or', class: 'bg-gradient-to-r from-black to-yellow-600' }
+    ],
+    stock: 12,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Fendi'
+  },
+  {
+    id: 'women-pareo-fendi-marron-or',
+    name: 'Paréo Fendi Marron & Or',
+    category: 'women_pareo',
+    price: 2400,
+    description: 'Paréo de plage premium Fendi Marron et Or au drapé sublime. Confortable et ultra-chic, il incarne l’esprit glamour des vacances ensoleillées.',
+    images: [
+      'https://i.ibb.co/ym2ZHw91/IMG-0274.jpg'
+    ],
+    image: 'https://i.ibb.co/ym2ZHw91/IMG-0274.jpg',
+    gender: 'femmes',
+    displayCategory: 'Paréos',
+    productType: 'Paréo',
+    currency: 'DA',
+    rating: 4.8,
+    sizes: ['S', 'M', 'L'],
+    colors: [
+      { name: 'Marron & Or', class: 'bg-gradient-to-r from-amber-800 to-yellow-600' }
+    ],
+    stock: 16,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Fendi'
+  },
+  {
+    id: 'women-pareo-fendi-chocolat',
+    name: 'Paréo Fendi Chocolat',
+    category: 'women_pareo',
+    price: 2400,
+    description: 'Paréo de plage premium Fendi de couleur chocolat gourmande et chic. Une matière fluide au tomber impeccable, parfaite pour un style habillé.',
+    images: [
+      'https://i.ibb.co/C3N5wD77/IMG-0273.jpg'
+    ],
+    image: 'https://i.ibb.co/C3N5wD77/IMG-0273.jpg',
+    gender: 'femmes',
+    displayCategory: 'Paréos',
+    productType: 'Paréo',
+    currency: 'DA',
+    rating: 4.8,
+    sizes: ['S', 'M', 'L'],
+    colors: [
+      { name: 'Chocolat', class: 'bg-[#7B3F00]' }
+    ],
+    stock: 14,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Fendi'
+  }
+];
+
+export const WOMEN_SOIREE_PRODUCTS: Product[] = [
+  {
+    id: 'women-soiree-1',
+    name: 'Haut de Soirée Marron',
+    category: 'women_soiree',
+    price: 2900,
+    description: 'Haut de soirée premium confectionné dans un satin brillant d’exception. Dos nu élégant et coupe fluide sublimant vos soirées estivales.',
+    images: [
+      'https://i.ibb.co/nMJBTfV7/6d05695f-4e01-4de5-92d9-d76200814c95.jpg'
+    ],
+    image: 'https://i.ibb.co/nMJBTfV7/6d05695f-4e01-4de5-92d9-d76200814c95.jpg',
+    gender: 'femmes',
+    displayCategory: 'Hauts de soirée',
+    productType: 'Haut de soirée',
+    currency: 'DA',
+    rating: 4.9,
+    sizes: ['XS', 'S', 'M', 'L'],
+    colors: [
+      { name: 'Marron', class: 'bg-[#8B4513]' }
+    ],
+    stock: 20,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  },
+  {
+    id: 'women-soiree-beige',
+    name: 'Haut de Soirée Beige',
+    category: 'women_soiree',
+    price: 2900,
+    description: 'Haut de soirée chic de couleur beige, d’une fluidité remarquable et sublimé par un design moderne pour vos plus belles soirées.',
+    images: [
+      'https://i.ibb.co/212jZ0cv/eec0869b-7d1e-4342-a8a7-7872ec02aab9.jpg'
+    ],
+    image: 'https://i.ibb.co/212jZ0cv/eec0869b-7d1e-4342-a8a7-7872ec02aab9.jpg',
+    gender: 'femmes',
+    displayCategory: 'Hauts de soirée',
+    productType: 'Haut de soirée',
+    currency: 'DA',
+    rating: 4.8,
+    sizes: ['XS', 'S', 'M', 'L'],
+    colors: [
+      { name: 'Beige', class: 'bg-[#F5F5DC]' }
+    ],
+    stock: 15,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  },
+  {
+    id: 'women-soiree-noir',
+    name: 'Haut de Soirée Noir',
+    category: 'women_soiree',
+    price: 2900,
+    description: 'Haut de soirée premium de couleur noire, intemporel et sensuel. Parfaitement ajusté pour un look moderne et raffiné.',
+    images: [
+      'https://i.ibb.co/KpsS2BTd/6a29a8ff-b773-4b0c-bc1c-f2351386beba.jpg'
+    ],
+    image: 'https://i.ibb.co/KpsS2BTd/6a29a8ff-b773-4b0c-bc1c-f2351386beba.jpg',
+    gender: 'femmes',
+    displayCategory: 'Hauts de soirée',
+    productType: 'Haut de soirée',
+    currency: 'DA',
+    rating: 4.9,
+    sizes: ['XS', 'S', 'M', 'L'],
+    colors: [
+      { name: 'Noir', class: 'bg-black' }
+    ],
+    stock: 18,
+    isMen: false,
+    isWomen: true,
+    featured: true,
+    inNewArrivals: true,
+    brand: 'Other'
+  }
+];
+
 export const INITIAL_PRODUCTS: Product[] = [
   ...MEN_PRODUCTS.map(p => ({ ...p, brand: detectBrand(p.name) })),
   ...WOMEN_PRODUCTS,
-  ...WOMEN_BEACHWEAR_PRODUCTS
+  ...WOMEN_BEACHWEAR_PRODUCTS,
+  ...WOMEN_PAREO_PRODUCTS,
+  ...WOMEN_SOIREE_PRODUCTS
 ];
 
 export const INITIAL_ORDERS: Order[] = [
@@ -375,14 +643,50 @@ export const getStoredProducts = (): Product[] => {
   // Make sure to parse and check if the prices or items are older format and update them
   let parsed: Product[] = JSON.parse(data);
   const first = parsed[0];
-  if (!first || first.price < 500 || parsed.length !== INITIAL_PRODUCTS.length || first.id !== 'men-1' || parsed[0]?.name !== 'Short Burberry Navy') {
+  if (!first || first.price < 500 || first.id !== 'men-1' || parsed[0]?.name !== 'Short Burberry Navy') {
     // Stale or outdated product list detected, clear storage so new beautiful DA catalog is loaded!
     localStorage.setItem('arena_products', JSON.stringify(INITIAL_PRODUCTS));
     return INITIAL_PRODUCTS;
   }
 
-  // Migrate any legacy women's products still priced at 6900 DA in local storage to 5900 DA
+  // Update/sync fields of INITIAL_PRODUCTS into parsed to ensure static updates are reflected
   let dirty = false;
+  parsed = parsed.map(p => {
+    const initProd = INITIAL_PRODUCTS.find(ip => ip.id === p.id);
+    if (initProd) {
+      if (
+        p.name !== initProd.name || 
+        p.price !== initProd.price || 
+        p.image !== initProd.image || 
+        p.brand !== initProd.brand || 
+        p.category !== initProd.category
+      ) {
+        dirty = true;
+        return {
+          ...p,
+          name: initProd.name,
+          price: initProd.price,
+          image: initProd.image,
+          images: initProd.images,
+          brand: initProd.brand,
+          category: initProd.category,
+          colors: initProd.colors,
+        };
+      }
+    }
+    return p;
+  });
+
+  // If there are brand new products in INITIAL_PRODUCTS that aren't in parsed, add them
+  const parsedIds = new Set(parsed.map(p => p.id));
+  INITIAL_PRODUCTS.forEach(ip => {
+    if (!parsedIds.has(ip.id)) {
+      parsed.push(ip);
+      dirty = true;
+    }
+  });
+
+  // Migrate any legacy women's products still priced at 6900 DA in local storage to 5900 DA
   parsed = parsed.map(p => {
     if (p.isWomen && p.price === 6900) {
       dirty = true;
@@ -390,6 +694,7 @@ export const getStoredProducts = (): Product[] => {
     }
     return p;
   });
+
   if (dirty) {
     localStorage.setItem('arena_products', JSON.stringify(parsed));
   }

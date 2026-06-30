@@ -12,11 +12,10 @@ const menImages = [
 ];
 
 const womenImages = [
-  "https://i.ibb.co/cKjZHyVm/BA1-BA1-E8-D417-4138-BC44-5428-D509-D96-A.png",
-  "https://i.ibb.co/kgZfnhXb/0-D65587-F-6202-49-D2-828-D-D876-F623-F180.png",
-  "https://i.ibb.co/G4BfK4xY/DBBDBA4-E-E753-4-A90-888-F-F0-A1-D804-E892.png",
-  "https://i.ibb.co/spF9ZgKR/D063699-C-8-B0-D-4-C64-954-E-8-B7-F91224-AE6.png",
-  "https://i.ibb.co/7tybsjgK/B696-EA52-9860-4-E52-A3-DE-CC4-BAB420-D04.png"
+  "https://i.ibb.co/99BTMFFP/4-BA16-D5-B-B640-4990-AC88-8062-DEA6518-B.png",
+  "https://i.ibb.co/xSPFxZhG/c15eac41-2d02-4fc6-a642-c88e2dcc08a2.jpg",
+  "https://i.ibb.co/fcQTKDJ/IMG-0276.jpg",
+  "https://i.ibb.co/nMJBTfV7/6d05695f-4e01-4de5-92d9-d76200814c95.jpg"
 ];
 
 const glassCardStyle = {
@@ -99,7 +98,7 @@ export default function PremiumSplitHero({ setCurrentTab, language = 'FR' }: Pre
                       >
                         <img 
                           src={img} 
-                          className="w-full h-full object-cover" 
+                          className="w-full h-full object-cover object-center" 
                           alt="Short de bain Homme" 
                           referrerPolicy="no-referrer" 
                         />
@@ -153,19 +152,22 @@ export default function PremiumSplitHero({ setCurrentTab, language = 'FR' }: Pre
                       transform: `translateX(-${currentIndex * (isMobile ? 78 : 90)}px)`
                     }}
                   >
-                    {[...womenImages, womenImages[0]].map((img, idx) => (
-                      <div 
-                        key={idx} 
-                        className="w-[68px] h-[85px] sm:w-[80px] sm:h-[100px] rounded-xl overflow-hidden bg-gray-100/50 border border-white/20 shadow-xs shrink-0"
-                      >
-                        <img 
-                          src={img} 
-                          className="w-full h-full object-cover" 
-                          alt="" 
-                          referrerPolicy="no-referrer" 
-                        />
-                      </div>
-                    ))}
+                    {Array.from({ length: 6 }).map((_, idx) => {
+                      const img = womenImages[idx % womenImages.length];
+                      return (
+                        <div 
+                          key={idx} 
+                          className="w-[68px] h-[85px] sm:w-[80px] sm:h-[100px] rounded-xl overflow-hidden bg-gray-100/50 border border-white/20 shadow-xs shrink-0"
+                        >
+                          <img 
+                            src={img} 
+                            className="w-full h-full object-cover object-center" 
+                            alt="" 
+                            referrerPolicy="no-referrer" 
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

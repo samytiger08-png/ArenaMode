@@ -1,7 +1,7 @@
 // Firebase config and helpers for Firestore database connection
 import { initializeApp } from 'firebase/app';
 import { 
-  getFirestore, 
+  initializeFirestore, 
   collection, 
   doc, 
   setDoc, 
@@ -23,7 +23,9 @@ const app = initializeApp({
   appId: firebaseConfig.appId
 });
 
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId || '(default)');
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+}, firebaseConfig.firestoreDatabaseId || '(default)');
 
 export async function fetchOrdersFromFirebase(): Promise<Order[]> {
   try {
