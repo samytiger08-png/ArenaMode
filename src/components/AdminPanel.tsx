@@ -125,6 +125,17 @@ export default function AdminPanel({
       };
     }).filter(Boolean);
 
+    let stockBySize = editingProduct?.stockBySize;
+    let stockVal = Number(productForm.stock);
+    if (stockBySize && Object.keys(stockBySize).length > 0) {
+      const alignedStock: Record<string, number> = {};
+      sizesSplit.forEach((sz) => {
+        alignedStock[sz] = stockBySize?.[sz] !== undefined ? stockBySize[sz] : 0;
+      });
+      stockBySize = alignedStock;
+      stockVal = Object.values(alignedStock).reduce((sum, q) => sum + q, 0);
+    }
+
     const savedProduct: Product = {
       id: editingProduct ? editingProduct.id : `prod-${Date.now()}`,
       name: productForm.name,
@@ -135,7 +146,8 @@ export default function AdminPanel({
       rating: Number(productForm.rating),
       sizes: sizesSplit,
       colors: colorsSplit,
-      stock: Number(productForm.stock),
+      stock: stockVal,
+      stockBySize: stockBySize,
       isMen: productForm.isMen,
       isWomen: productForm.isWomen,
       featured: productForm.featured,
@@ -598,13 +610,35 @@ export default function AdminPanel({
                         <div className="h-10 w-8 bg-white shrink-0 rounded overflow-hidden border">
                           <img src={p.images[0]} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
                         </div>
-                        <div className="flex-1 text-left space-y-0.5">
+                        <div className="flex-1 text-left space-y-1">
                           <h4 className="font-serif text-xs font-black text-gray-800 line-clamp-1">{p.name}</h4>
                           <span className="text-[9px] font-bold text-gray-400 tracking-wider block uppercase">{p.category === 'men_swim_shorts' ? 'Shorts Homme' : p.category === 'women_beachwear' ? 'Robe Plage' : p.category === 'women_pareo' ? 'Paréo' : p.category === 'women_soiree' ? 'Haut Soirée' : 'Maillots Femme'}</span>
+                          
+                          {/* Specific size status details */}
+                          {p.stockBySize && Object.keys(p.stockBySize).length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {Object.entries(p.stockBySize).map(([sz, qty]) => {
+                                if (qty === 0) {
+                                  return (
+                                    <span key={sz} className="text-[9px] font-mono font-black text-red-600 bg-red-100/50 px-1.5 py-0.5 rounded border border-red-200">
+                                      {sz}: ÉPUISÉ
+                                    </span>
+                                  );
+                                } else if (qty <= 2) {
+                                  return (
+                                    <span key={sz} className="text-[9px] font-mono font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                                      {sz}: {qty} rest.
+                                    </span>
+                                  );
+                                }
+                                return null;
+                              })}
+                            </div>
+                          )}
                         </div>
                         <div className="text-right flex flex-col justify-center">
                           <span className="font-mono text-xs font-black text-red-600 bg-red-100/60 px-2 py-1 rounded select-none uppercase">
-                            {p.stock === 0 ? 'RUPTURE' : `${p.stock} RESTANTS`}
+                            {p.stock === 0 ? 'RUPTURE' : `${p.stock} TOTAL`}
                           </span>
                         </div>
                       </div>
@@ -617,44 +651,107 @@ export default function AdminPanel({
 
                 {/* All stocks tracking updater card */}
                 <div className="bg-white p-5 rounded-2xl border space-y-4 text-left">
-                  <span className="text-[10px] font-mono font-bold tracking-widest text-gray-400 uppercase border-b pb-2 block">Mise à jour rapide des quantités</span>
+                  <span className="text-[10px] font-mono font-bold tracking-widest text-gray-400 uppercase border-b pb-2 block">Mise à jour des stocks par taille</span>
                   
-                  <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
-                    {products.map((p) => (
-                      <div key={p.id} className="flex items-center justify-between gap-3 p-2 bg-gray-50/60 rounded-xl border border-gray-100">
-                        <div className="flex-1 text-left min-w-0">
-                          <span className="font-serif font-bold text-xs text-gray-800 block line-clamp-1">{p.name}</span>
-                          <span className="text-[9px] text-gray-400 uppercase font-bold tracking-wider">{p.category === 'men_swim_shorts' ? 'Shorts' : p.category === 'women_beachwear' ? 'Robe' : p.category === 'women_pareo' ? 'Paréo' : p.category === 'women_soiree' ? 'Haut Soirée' : 'Maillot'}</span>
-                        </div>
+                  <div className="space-y-4 max-h-[500px] overflow-y-auto pr-1">
+                    {products.map((p) => {
+                      const hasStockBySize = p.stockBySize && Object.keys(p.stockBySize).length > 0;
+                      return (
+                        <div key={p.id} className="p-4 bg-gray-50/60 rounded-2xl border border-gray-100 space-y-3">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="text-left min-w-0">
+                              <span className="font-serif font-bold text-xs md:text-sm text-gray-800 block line-clamp-1">{p.name}</span>
+                              <span className="text-[9px] text-gray-400 uppercase font-bold tracking-wider">{p.category === 'men_swim_shorts' ? 'Shorts' : p.category === 'women_beachwear' ? 'Robe' : p.category === 'women_pareo' ? 'Paréo' : p.category === 'women_soiree' ? 'Haut Soirée' : 'Maillot'}</span>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <span className="text-[9px] font-mono font-bold tracking-widest text-gray-400 uppercase block">STOCK TOTAL</span>
+                              <span className="font-mono text-xs font-black text-[#1A1A2E] bg-white border px-2 py-0.5 rounded-lg shadow-sm">
+                                {p.stock} pcs
+                              </span>
+                            </div>
+                          </div>
 
-                        {/* Adjust Stocks Quick counters */}
-                        <div className="flex items-center justify-end gap-3 shrink-0">
-                          <div className="flex items-center border bg-white rounded-lg overflow-hidden shrink-0">
-                            <button
-                              onClick={() => {
-                                if (p.stock > 0) {
-                                  const updated = products.map((x) => x.id === p.id ? { ...x, stock: x.stock - 1 } : x);
-                                  onUpdateProducts(updated);
-                                }
-                              }}
-                              className="px-2 py-1 text-gray-400 hover:text-gray-900 text-xs font-bold cursor-pointer"
-                            >
-                              -
-                            </button>
-                            <span className="px-2.5 text-xs font-black font-mono text-gray-700 min-w-6 text-center">{p.stock}</span>
-                            <button
-                              onClick={() => {
-                                const updated = products.map((x) => x.id === p.id ? { ...x, stock: x.stock + 1 } : x);
-                                onUpdateProducts(updated);
-                              }}
-                              className="px-2 py-1 text-gray-400 hover:text-gray-950 text-xs font-bold cursor-pointer"
-                            >
-                              +
-                            </button>
+                          {/* Sizes editor container */}
+                          <div className="bg-white p-3 rounded-xl border border-gray-100 space-y-2">
+                            <div className="flex items-center justify-between text-[9px] font-mono font-bold text-gray-400 uppercase tracking-widest border-b pb-1">
+                              <span>Taille</span>
+                              <span>Quantité</span>
+                            </div>
+
+                            {p.sizes && p.sizes.length > 0 ? (
+                              <div className="space-y-1.5">
+                                {p.sizes.map((sz) => {
+                                  const sizeStock = p.stockBySize?.[sz] !== undefined ? p.stockBySize[sz] : 0;
+                                  return (
+                                    <div key={sz} className="flex items-center justify-between gap-3 py-0.5">
+                                      <span className="font-mono text-xs font-black text-gray-700 bg-gray-100 px-2 py-0.5 rounded-md min-w-8 text-center">
+                                        {sz}
+                                      </span>
+
+                                      <div className="flex items-center border border-gray-200 bg-white rounded-lg overflow-hidden shrink-0">
+                                        <button
+                                          onClick={() => {
+                                            let newStockBySize: Record<string, number> = {};
+                                            if (p.stockBySize) {
+                                              newStockBySize = { ...p.stockBySize };
+                                            } else {
+                                              p.sizes.forEach(s => {
+                                                newStockBySize[s] = s === p.sizes[0] ? p.stock : 0;
+                                              });
+                                            }
+                                            const currentVal = newStockBySize[sz] || 0;
+                                            if (currentVal > 0) {
+                                              newStockBySize[sz] = currentVal - 1;
+                                              const totalStock = Object.values(newStockBySize).reduce((sum, q) => sum + q, 0);
+                                              const updated = products.map((x) => x.id === p.id ? { ...x, stockBySize: newStockBySize, stock: totalStock } : x);
+                                              onUpdateProducts(updated);
+                                            }
+                                          }}
+                                          className="px-2 py-1 text-gray-400 hover:text-gray-900 text-xs font-bold cursor-pointer hover:bg-gray-50 transition-colors"
+                                        >
+                                          -
+                                        </button>
+                                        <span className="px-2.5 text-xs font-black font-mono text-gray-700 min-w-6 text-center">
+                                          {p.stockBySize?.[sz] !== undefined ? p.stockBySize[sz] : 0}
+                                        </span>
+                                        <button
+                                          onClick={() => {
+                                            let newStockBySize: Record<string, number> = {};
+                                            if (p.stockBySize) {
+                                              newStockBySize = { ...p.stockBySize };
+                                            } else {
+                                              p.sizes.forEach(s => {
+                                                newStockBySize[s] = s === p.sizes[0] ? p.stock : 0;
+                                              });
+                                            }
+                                            const currentVal = newStockBySize[sz] || 0;
+                                            newStockBySize[sz] = currentVal + 1;
+                                            const totalStock = Object.values(newStockBySize).reduce((sum, q) => sum + q, 0);
+                                            const updated = products.map((x) => x.id === p.id ? { ...x, stockBySize: newStockBySize, stock: totalStock } : x);
+                                            onUpdateProducts(updated);
+                                          }}
+                                          className="px-2 py-1 text-gray-400 hover:text-gray-950 text-xs font-bold cursor-pointer hover:bg-gray-50 transition-colors"
+                                        >
+                                          +
+                                        </button>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            ) : (
+                              <div className="text-center py-2 text-xs text-gray-400">Aucune taille définie pour cet article.</div>
+                            )}
+
+                            {!hasStockBySize && (
+                              <div className="mt-2 text-[9px] text-amber-600 bg-amber-50 p-2 rounded-lg leading-relaxed font-medium">
+                                ⚠️ En attente de configuration par taille. Stock global actuel : <strong className="font-bold">{p.stock} pcs</strong> utilisé comme fallback. Ajustez n'importe quelle taille pour activer la gestion détaillée.
+                              </div>
+                            )}
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>

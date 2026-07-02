@@ -200,11 +200,28 @@ export default function App() {
     const updatedProducts = products.map((prod) => {
       const itemsBought = cart.filter((ci) => ci.product.id === prod.id);
       if (itemsBought.length > 0) {
-        const totalQtyDeducted = itemsBought.reduce((sum, item) => sum + item.quantity, 0);
-        return {
-          ...prod,
-          stock: Math.max(0, prod.stock - totalQtyDeducted)
-        };
+        const hasStockBySize = prod.stockBySize && Object.keys(prod.stockBySize).length > 0;
+        if (hasStockBySize) {
+          const stockBySize = { ...prod.stockBySize };
+          itemsBought.forEach((item) => {
+            const sz = item.selectedSize;
+            if (sz && stockBySize[sz] !== undefined) {
+              stockBySize[sz] = Math.max(0, stockBySize[sz] - item.quantity);
+            }
+          });
+          const totalStock = Object.keys(stockBySize).reduce((sum, sz) => sum + (stockBySize[sz] || 0), 0);
+          return {
+            ...prod,
+            stockBySize,
+            stock: totalStock
+          };
+        } else {
+          const totalQtyDeducted = itemsBought.reduce((sum, item) => sum + item.quantity, 0);
+          return {
+            ...prod,
+            stock: Math.max(0, prod.stock - totalQtyDeducted)
+          };
+        }
       }
       return prod;
     });
@@ -279,10 +296,25 @@ export default function App() {
     // Deduct stock for that product
     const updatedProducts = products.map((prod) => {
       if (prod.id === orderData.productId) {
-        return {
-          ...prod,
-          stock: Math.max(0, prod.stock - orderData.quantity)
-        };
+        const hasStockBySize = prod.stockBySize && Object.keys(prod.stockBySize).length > 0;
+        if (hasStockBySize) {
+          const stockBySize = { ...prod.stockBySize };
+          const sz = orderData.size;
+          if (sz && stockBySize[sz] !== undefined) {
+            stockBySize[sz] = Math.max(0, stockBySize[sz] - orderData.quantity);
+          }
+          const totalStock = Object.keys(stockBySize).reduce((sum, sz) => sum + (stockBySize[sz] || 0), 0);
+          return {
+            ...prod,
+            stockBySize,
+            stock: totalStock
+          };
+        } else {
+          return {
+            ...prod,
+            stock: Math.max(0, prod.stock - orderData.quantity)
+          };
+        }
       }
       return prod;
     });

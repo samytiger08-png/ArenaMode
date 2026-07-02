@@ -20,7 +20,13 @@ export default function ProductCard({
   onAddToCart,
 }: ProductCardProps): React.JSX.Element {
   // Use first color and first size as defaults for fast adding to cart
-  const defaultSize = product.sizes[0] || 'M';
+  let defaultSize = product.sizes[0] || 'M';
+  if (product.stockBySize && Object.keys(product.stockBySize).length > 0) {
+    const availableSize = product.sizes.find(sz => (product.stockBySize?.[sz] || 0) > 0);
+    if (availableSize) {
+      defaultSize = availableSize;
+    }
+  }
   const defaultColor = product.colors[0] || { name: 'Sunset', class: 'bg-orange-500' };
 
   return (

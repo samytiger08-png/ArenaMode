@@ -72,7 +72,14 @@ export default function ProductPage({
 
   useEffect(() => {
     if (product) {
-      setSelectedSize(product.sizes[0] || 'M');
+      let initialSize = product.sizes[0] || 'M';
+      if (product.stockBySize && Object.keys(product.stockBySize).length > 0) {
+        const availableSize = product.sizes.find(sz => (product.stockBySize?.[sz] || 0) > 0);
+        if (availableSize) {
+          initialSize = availableSize;
+        }
+      }
+      setSelectedSize(initialSize);
       setSelectedColor(product.colors[0] || { name: 'Sunset', class: 'bg-orange-500' });
       setActiveImageIndex(0);
       setQuantity(1);
@@ -125,7 +132,10 @@ export default function ProductPage({
   };
 
   const handlePlus = () => {
-    if (quantity < product.stock) {
+    const maxStock = product.stockBySize && product.stockBySize[selectedSize] !== undefined
+      ? product.stockBySize[selectedSize]
+      : product.stock;
+    if (quantity < maxStock) {
       setQuantity(quantity + 1);
     }
   };
@@ -332,17 +342,28 @@ export default function ProductPage({
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((sz) => {
                     const isSelected = selectedSize === sz;
+                    const isOutOfStock = product.stockBySize 
+                      ? (product.stockBySize[sz] === 0 || product.stockBySize[sz] === undefined)
+                      : (product.stock === 0);
                     return (
                       <button
                         key={sz}
+                        disabled={isOutOfStock}
                         onClick={() => setSelectedSize(sz)}
-                        className={`h-11 w-11 rounded-xl text-xs font-black uppercase transition-all duration-205 flex items-center justify-center border cursor-pointer ${
-                          isSelected
+                        className={`h-11 w-11 rounded-xl text-xs font-black uppercase transition-all duration-205 flex items-center justify-center border relative ${
+                          isOutOfStock
+                            ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50 overflow-hidden line-through'
+                            : isSelected
                             ? 'border-[#1A1A2E] bg-[#1A1A2E] text-white shadow-md'
                             : 'border-gray-200 text-gray-600 hover:border-gray-400 bg-white'
                         }`}
                       >
                         {sz}
+                        {isOutOfStock && (
+                          <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <span className="w-[120%] h-[1.5px] bg-red-400/40 transform rotate-45" />
+                          </span>
+                        )}
                       </button>
                     );
                   })}
@@ -373,13 +394,21 @@ export default function ProductPage({
                   <button
                     type="button"
                     onClick={handlePlus}
-                    disabled={quantity >= product.stock}
+                    disabled={
+                      quantity >= (product.stockBySize && product.stockBySize[selectedSize] !== undefined
+                        ? product.stockBySize[selectedSize]
+                        : product.stock)
+                    }
                     className="px-3.5 py-2 text-gray-500 hover:bg-gray-100 disabled:opacity-40 transition-colors cursor-pointer"
                   >
                     +
                   </button>
                 </div>
-                <span className="text-[11px] text-gray-400 font-semibold uppercase">{product.stock} pièces disponibles</span>
+                <span className="text-[11px] text-gray-400 font-semibold uppercase">
+                  {product.stockBySize && product.stockBySize[selectedSize] !== undefined
+                    ? `${product.stockBySize[selectedSize]} pièces disponibles`
+                    : `${product.stock} pièces disponibles`}
+                </span>
               </div>
             </div>
 

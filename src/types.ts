@@ -18,6 +18,7 @@ export interface Product {
   isWomen: boolean;
   featured: boolean;
   inNewArrivals: boolean;
+  stockBySize?: Record<string, number>;
 
   gender?: string;
   displayCategory?: string;
